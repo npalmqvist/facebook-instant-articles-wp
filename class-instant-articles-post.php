@@ -658,10 +658,17 @@ class Instant_Articles_Post {
 
 			$header->withCover( $image );
 		}
+		
+		
+		$footer = Footer::create()->withCopyright('HK Silwing/Troja');
+		if(isset($rel_obj))
+			$footer->withRelatedArticles( $rel_obj );
+        	
 		$this->instant_article =
 			InstantArticle::create()
 				->withCanonicalUrl( $this->get_canonical_url() )
-				->withHeader( $header );
+				->withHeader( $header )
+        		->withFooter( $footer );
 
 		$settings_style = Instant_Articles_Option_Styles::get_option_decoded();
 		if ( isset( $settings_style['article_style'] ) && ! empty ( $settings_style['article_style'] ) ) {
