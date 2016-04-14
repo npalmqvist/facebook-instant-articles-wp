@@ -562,6 +562,43 @@ class Instant_Articles_Post {
 		return $type;
 	}
 
+	/**
+	 * Get related articles 
+	 *
+	 * @since 2.5
+	 * @return array
+	 */
+	public function get_related_articles() {
+
+		$related = array();
+
+		// Check for related posts
+		$post = $this->_post;  
+		$tags = wp_get_post_tags($post->ID);  
+				      
+		if ($tags) {  
+			$tag_ids = array();  
+				    
+			foreach($tags as $individual_tag) $tag_ids[] = $individual_tag->term_id;  
+			$args=array(  
+				'tag__in' => $tag_ids,  
+				'post__not_in' => array($post->ID),  
+				'posts_per_page'=>3, // Number of related posts to display.  
+				'ignore_sticky_posts'=>1  
+			);  
+			      
+			$my_query = new wp_query( $args );  
+					
+			$i=0;
+			while( $my_query->have_posts() ) {  
+				$my_query->the_post();  
+				$related[] = get_the_permalink();
+			}  
+		}
+		wp_reset_query();  
+
+		return $related;
+	}
 
 	/**
 	 * Render post
