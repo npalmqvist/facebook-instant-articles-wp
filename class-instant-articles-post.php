@@ -151,6 +151,10 @@ class Instant_Articles_Post {
 		}
 
 		$subtitle = '';
+		
+		$post = get_post( $this->get_the_id() );
+
+		$excerpt = apply_filters( 'get_the_excerpt', $post->post_excerpt );
 
 		/**
 		 * Filter the subtitle for use in instant articles
@@ -160,7 +164,7 @@ class Instant_Articles_Post {
 		 * @param string                 $subtitle              The current subtitle for the post.
 		 * @param Instant_Article_Post   $instant_article_post  The instant article post
 		 */
-		$subtitle = apply_filters( 'instant_articles_subtitle', $subtitle, $this );
+		$subtitle = apply_filters( 'instant_articles_subtitle', $excerpt, $this );
 
 		$this->_subtitle = $subtitle;
 
@@ -627,7 +631,8 @@ class Instant_Articles_Post {
 				->withModifyTime(
 					Time::create( Time::MODIFIED )->withDatetime( new DateTime( $this->_post->post_modified, $date_time_zone ) )
 				)
-				->withTitle( $this->get_the_title() );
+				->withTitle( $this->get_the_title() )
+				->withSubtitle( $this->get_the_subtitle() );
 
 		$authors = $this->get_the_authors();
 		foreach ( $authors as $author ) {
